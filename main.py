@@ -17,7 +17,7 @@ def logging(func):
         wrapper.count += 1
         res = func(*args, **kwargs)
         call_count[func.__name__] = wrapper.count
-        print(func.__name__, call_count[func.__name__], sep='\n')
+        print(func.__name__, args[1], call_count[func.__name__], sep='\n')
         return res
 
     wrapper.count = 0
@@ -68,7 +68,6 @@ class Word:  # for working Words
                 Word_exm.add_case_several_words()
                 continue
 
-    @logging
     def add_case_one_word(self):
         a_0 = self.word
         b_0 = Word.sheet['B' + str(self.string)].value
@@ -84,12 +83,11 @@ class Word:  # for working Words
         if not d_0:
             d_0 = ' '
 
-        example = self.get_examples()
+        example = self.get_examples(a_0)
 
         with open("Output.txt", "a", encoding="utf8") as file:
             file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} {b_0} * {example}\n")
 
-    @logging
     def add_case_several_words(self):
 
         a_0 = self.word
@@ -140,7 +138,7 @@ class Word:  # for working Words
             c_array.append(c_1)
             d_array.append(d_1)
 
-        example = self.get_examples()
+        example = self.get_examples(a_0)
 
         b_ex = ", ".join(sorted(b_array))
         c_ex = "<br>".join(c_array)
@@ -157,7 +155,7 @@ class Word:  # for working Words
         file.close()
 
     @logging
-    def get_examples(self):
+    def get_examples(self, *args):
         self.example_list_phrases_wooordhunt = []
         self.example_list_sentence_wooordhunt = []
         self.example_list_sentence_cambridge = []
@@ -168,8 +166,8 @@ class Word:  # for working Words
             self.get_examples_from_cambridge_org()
 
         # setting sequence examples
-        example = "<br>".join(self.example_list_phrases_wooordhunt).join(self.example_list_sentence_wooordhunt).join(
-            self.example_list_sentence_cambridge)
+        ex = self.example_list_phrases_wooordhunt + self.example_list_sentence_wooordhunt + self.example_list_sentence_cambridge
+        example = "<br>".join(ex)
         return example
 
     def get_examples_from_wooordhunt_ru(self):
