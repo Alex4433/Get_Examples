@@ -17,7 +17,7 @@ def logging(func):
         wrapper.count += 1
         res = func(*args, **kwargs)
         call_count[func.__name__] = wrapper.count
-        print(func.__name__, args[1], call_count[func.__name__], sep='\n')
+        print(func.__name__, args[1], call_count[func.__name__])
         return res
 
     wrapper.count = 0
@@ -251,7 +251,7 @@ class FileWork:  # save load compare file methods
             exit(1)
 
     def save_bank_words(self):  # Update file old words
-        with open(self.set_old_words, 'w') as filehandle:
+        with open(self.path_old_words, 'w') as filehandle:
             filehandle.writelines("%s\n" % place for place in self.set_old_words)
         filehandle.close()
         print('File old_words.txt update')

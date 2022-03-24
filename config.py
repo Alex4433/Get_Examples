@@ -5,4 +5,4 @@ end_cell = 999
 excel_list_name = 'new'
 # Enable source examples
 dictionary_wooordhunt_ru = True
-dictionary_cambridge_org = True
+dictionary_cambridge_org = False
