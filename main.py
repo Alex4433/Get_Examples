@@ -38,8 +38,16 @@ class Word:  # for working Words
 
     @classmethod
     def processing(cls):
-        wd = openpyxl.load_workbook(filename=Word.excel_file_name)
-        Word.sheet = wd[Word.excel_list_name]
+        try:
+            wd = openpyxl.load_workbook(filename=Word.excel_file_name)
+        except:
+            print('Excel file isn`t founded')
+            raise (AttributeError)
+        try:
+            Word.sheet = wd[Word.excel_list_name]
+        except:
+            print('Excel list name isn`t correct or founded')
+            raise (AttributeError)
 
         count_empty_string = 0
         for string in range(config.start_cell, config.end_cell):
@@ -85,8 +93,11 @@ class Word:  # for working Words
 
         example = self.get_examples(a_0)
 
-        with open("Output.txt", "a", encoding="utf8") as file:
-            file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} {b_0} * {example}\n")
+        try:
+            with open("Output.txt", "a", encoding="utf8") as file:
+                file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} {b_0} * {example}\n")
+        except:
+            print(a_0, 'faile output')
 
     def add_case_several_words(self):
 
@@ -150,9 +161,11 @@ class Word:  # for working Words
             d_ex.append('<br>')
         d_ex = ''.join(d_ex)
 
-        with open("Output.txt", "a", encoding="utf8") as file:
-            file.write(f"{self.word.lower()} * {b_ex} * {c_ex} * {d_ex} * {example}\n")
-        file.close()
+        try:
+            with open("Output.txt", "a", encoding="utf8") as file:
+                file.write(f"{self.word.lower()} * {b_ex} * {c_ex} * {d_ex} * {example}\n")
+        except:
+            print(self.word, 'faile output')
 
     @logging
     def get_examples(self, *args):
@@ -161,13 +174,22 @@ class Word:  # for working Words
         self.example_list_sentence_cambridge = []
 
         if Word.enable_dictionary_wooordhunt_ru:
-            self.get_examples_from_wooordhunt_ru()
+            try:
+                self.get_examples_from_wooordhunt_ru()
+            except:
+                print(self.word, 'fail getting wooordhunt')
         if Word.enable_dictionary_cambridge_org:
-            self.get_examples_from_cambridge_org()
-
+            try:
+                self.get_examples_from_cambridge_org()
+            except:
+                print(self.word, 'fail getting cambridge')
         # setting sequence examples
-        ex = self.example_list_phrases_wooordhunt + self.example_list_sentence_wooordhunt + self.example_list_sentence_cambridge
-        example = "<br>".join(ex)
+        try:
+            ex = self.example_list_phrases_wooordhunt + self.example_list_sentence_wooordhunt + self.example_list_sentence_cambridge
+            example = "<br>".join(ex)
+        except:
+            print(self.word, 'example crash all')
+            return ' '
         return example
 
     def get_examples_from_wooordhunt_ru(self):
@@ -243,8 +265,6 @@ class Tools:
             pass
         filehandle.close()
 
-
-current_directory = os.getcwd()
 
 if __name__ == '__main__':
     Tools.clear_output_file()
