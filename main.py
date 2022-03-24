@@ -151,7 +151,7 @@ class Word:  # for working Words
 
         example = self.get_examples(a_0)
 
-        b_ex = ", ".join(sorted(b_array))
+        b_ex = ", ".join(sorted(set(b_array)))
         c_ex = "<br>".join(c_array)
         d_ex = []
         for i in range(len(d_array)):
