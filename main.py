@@ -272,3 +272,4 @@ if __name__ == '__main__':
     Bank_File.load_bank_words()
     Word.processing()
     Bank_File.save_bank_words()
+    os.system('pause')
