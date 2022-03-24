@@ -11,8 +11,8 @@ class Word:  # for working Words
     excel_list_name = config.excel_list_name
     excel_file_name = config.excel_file_name
     enable_stacking = None
-    enable_dictionary_wooordhunt_ru = None
-    enable_dictionary_cambridge_org = None
+    enable_dictionary_wooordhunt_ru = config.dictionary_wooordhunt_ru
+    enable_dictionary_cambridge_org = config.dictionary_cambridge_org
     sheet = None
 
     def __init__(self, word, string):
@@ -132,14 +132,18 @@ class Word:  # for working Words
         file.close()
 
     def get_examples(self):
-        self.example_list = []
+        self.example_list_phrases_wooordhunt = []
+        self.example_list_sentence_wooordhunt = []
+        self.example_list_sentence_cambridge = []
 
         if Word.enable_dictionary_wooordhunt_ru:
             self.get_examples_from_wooordhunt_ru()
         if Word.enable_dictionary_cambridge_org:
             self.get_examples_from_cambridge_org()
 
-        example = "<br>".join(self.example_list)
+        # setting sequence examples
+        example = "<br>".join(self.example_list_phrases_wooordhunt).join(self.example_list_sentence_wooordhunt).join(
+            self.example_list_sentence_cambridge)
         return example
 
     def get_examples_from_wooordhunt_ru(self):
@@ -156,13 +160,13 @@ class Word:  # for working Words
         lk = tr.split('  ')
         for i in lk:
             i = i.strip(' ')
-            self.example_list.append(i)
-        wordexamples = soup.find_all(class_="ex_o")
-        wordexamples2 = soup.find_all(class_="ex_t human")
+            self.example_list_phrases_wooordhunt.append(i)
+        word_examples = soup.find_all(class_="ex_o")
+        word_examples_2 = soup.find_all(class_="ex_t human")
         for key in range(30):
             try:
-                example1 = wordexamples[key].text + wordexamples2[key].text
-                self.example_list.append(example1)
+                example1 = word_examples[key].text + word_examples_2[key].text
+                self.example_list_sentence_wooordhunt.append(example1)
             except:
                 continue
 
@@ -180,7 +184,7 @@ class Word:  # for working Words
         tr = soup.find_all(class_="deg")
         for i in tr:
             i = i.text.strip()
-            self.example_list.append(i)
+            self.example_list_sentence_cambridge.append(i)
 
         time.sleep(random.randrange(1, 2))
 
@@ -219,6 +223,8 @@ class Tools:
 current_directory = os.getcwd()
 
 if __name__ == '__main__':
+    Tools.clear_output_file()
     Bank_File = FileWork(path_old_words='old_words.txt')
     Bank_File.load_bank_words()
     Word.processing()
+    Bank_File.save_bank_words()
