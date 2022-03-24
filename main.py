@@ -1,10 +1,27 @@
 import random
 import time
+from functools import wraps
+
 import requests
 from bs4 import BeautifulSoup
 import openpyxl
 import os
 import config
+
+
+def logging(func):
+    call_count = dict()
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        wrapper.count += 1
+        res = func(*args, **kwargs)
+        call_count[func.__name__] = wrapper.count
+        print(func.__name__, call_count[func.__name__], sep='\n')
+        return res
+
+    wrapper.count = 0
+    return wrapper
 
 
 class Word:  # for working Words
@@ -51,6 +68,7 @@ class Word:  # for working Words
                 Word_exm.add_case_several_words()
                 continue
 
+    @logging
     def add_case_one_word(self):
         a_0 = self.word
         b_0 = Word.sheet['B' + str(self.string)].value
@@ -71,6 +89,7 @@ class Word:  # for working Words
         with open("Output.txt", "a", encoding="utf8") as file:
             file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} {b_0} * {example}\n")
 
+    @logging
     def add_case_several_words(self):
 
         a_0 = self.word
@@ -137,6 +156,7 @@ class Word:  # for working Words
             file.write(f"{self.word.lower()} * {b_ex} * {c_ex} * {d_ex} * {example}\n")
         file.close()
 
+    @logging
     def get_examples(self):
         self.example_list_phrases_wooordhunt = []
         self.example_list_sentence_wooordhunt = []
