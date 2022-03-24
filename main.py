@@ -35,14 +35,14 @@ class Word:  # for working Words
             if value_current in Bank_File.set_old_words:
                 continue
             Bank_File.set_old_words.add(value_current)
-            if value_current == value_previous:  # If woord already met
+            if value_current == value_previous:  # If word`ve met already
                 continue
-            if count_empty_string > 50:  # Если 50 пустых строк то выход из цикла
+            if count_empty_string > 50:  # if 50 empty string than exit
                 break
-            if count_empty_string == None:  # Выход из цикла если он дошел до пустых строк
+            if count_empty_string == None:  #
                 count_empty_string += 1
                 continue
-            if value_current != value_next and value_current != value_next2:  # Слово неравно след. просто запись всех значений
+            if value_current != value_next and value_current != value_next2:  #
                 Word_exm = Word(value_current, string)
                 Word_exm.add_case_one_word()
                 continue
@@ -69,7 +69,7 @@ class Word:  # for working Words
         example = self.get_examples()
 
         with open("Output.txt", "a", encoding="utf8") as file:
-            file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} * {example}\n")
+            file.write(f"{a_0.lower()} * {b_0} * {c_0} * {d_0} {b_0} * {example}\n")
 
     def add_case_several_words(self):
 
@@ -125,10 +125,16 @@ class Word:  # for working Words
 
         b_ex = ", ".join(sorted(b_array))
         c_ex = "<br>".join(c_array)
-        d_ex = "<br>".join(d_array)
+        d_ex = []
+        for i in range(len(d_array)):
+            d_ex.append(d_array[i])
+            d_ex.append(' ')
+            d_ex.append(b_array[i])
+            d_ex.append('<br>')
+        d_ex = ''.join(d_ex)
 
         with open("Output.txt", "a", encoding="utf8") as file:
-            file.write(f"{self.word} * {b_ex} * {c_ex} * {d_ex} * {example}\n")
+            file.write(f"{self.word.lower()} * {b_ex} * {c_ex} * {d_ex} * {example}\n")
         file.close()
 
     def get_examples(self):
@@ -196,7 +202,7 @@ class FileWork:  # save load compare file methods
 
     def load_bank_words(self):
         try:
-            with open(self.path_old_words, 'r') as filehandle:  # подгрузка множества со словами из файла
+            with open(self.path_old_words, 'r') as filehandle:  # Load file old words
                 self.set_old_words = set(current_place.rstrip() for current_place in filehandle.readlines())
             filehandle.close()
         except Exception as exll:
@@ -204,7 +210,7 @@ class FileWork:  # save load compare file methods
             os.system('pause')
             exit(1)
 
-    def save_bank_words(self):  # Функция выгружает множество слов из файла
+    def save_bank_words(self):  # Update file old words
         with open(self.set_old_words, 'w') as filehandle:
             filehandle.writelines("%s\n" % place for place in self.set_old_words)
         filehandle.close()
